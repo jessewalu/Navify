@@ -1,0 +1,8 @@
+{
+  "areas": [
+    {"id":"A1","name":"Main Ave - East","congestion":30},
+    {"id":"A2","name":"Central Blvd","congestion":45},
+    {"id":"A3","name":"Market St","congestion":70},
+    {"id":"A4","name":"University Road","congestion":20}
+  ]
+}
