@@ -1,5 +1,8 @@
 // client-side JS
-const socket = io();
+// If the frontend is served from Live Server (127.0.0.1:5500) or similar,
+// point API and socket requests to the backend server which runs on port 3000.
+const SERVER_ORIGIN = 'http://localhost:3000';
+const socket = io(SERVER_ORIGIN);
 
 document.addEventListener('DOMContentLoaded', () => {
   const mapEl = document.getElementById('map');
@@ -32,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // fetch initial traffic snapshot
   async function fetchTraffic(){
-    const res = await fetch('/api/traffic');
+    const res = await fetch(`${SERVER_ORIGIN}/api/traffic`);
     const data = await res.json();
     renderAreas(data.areas);
     updateAnalytics(data.areas);
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // fetch transit
   async function fetchTransit(){
-    const res = await fetch('/api/transit');
+    const res = await fetch(`${SERVER_ORIGIN}/api/transit`);
     const data = await res.json();
     transitEl.innerHTML = '';
     data.next.forEach(n=>{
@@ -61,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // fetch routes
   async function findRoutes(origin='Start', dest='End'){
-    const res = await fetch(`/api/routes?origin=${encodeURIComponent(origin)}&dest=${encodeURIComponent(dest)}`);
+    const res = await fetch(`${SERVER_ORIGIN}/api/routes?origin=${encodeURIComponent(origin)}&dest=${encodeURIComponent(dest)}`);
     const data = await res.json();
     routesEl.innerHTML = '';
     let sumEta=0;
