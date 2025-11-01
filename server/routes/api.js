@@ -15,25 +15,28 @@ router.get('/traffic', (req, res) => {
 // returns mocked route options and ETAs based on current traffic
 router.get('/routes', (req, res) => {
   const { origin = 'A', dest = 'B' } = req.query;
-  // Create 3 mocked routes with ETAs influenced by random factor and traffic
+  // Influence ETAs by current traffic: higher average congestion increases ETA
+  const avgCong = Math.round(trafficData.areas.reduce((s,a)=>s+a.congestion,0)/trafficData.areas.length);
+  const baseFast = 8 + Math.round(avgCong/8); // base ETA influenced by congestion
   const routes = [
-    { id: shortid.generate(), name: 'Fastest', distance_km: 6.2, eta_min: Math.max(8, Math.round(10 + Math.random()*8)) },
-    { id: shortid.generate(), name: 'Balanced', distance_km: 7.4, eta_min: Math.max(10, Math.round(12 + Math.random()*10)) },
-    { id: shortid.generate(), name: 'Scenic (avoid highway)', distance_km: 9.8, eta_min: Math.max(12, Math.round(15 + Math.random()*12)) }
+    { id: shortid.generate(), name: 'Fastest', distance_km: 6.2, eta_min: Math.max(6, baseFast + Math.round(Math.random()*6) ) },
+    { id: shortid.generate(), name: 'Balanced', distance_km: 7.4, eta_min: Math.max(8, baseFast + 4 + Math.round(Math.random()*8)) },
+    { id: shortid.generate(), name: 'Scenic (avoid highway)', distance_km: 9.8, eta_min: Math.max(10, baseFast + 8 + Math.round(Math.random()*10)) }
   ];
-  res.json({ origin, dest, generated: Date.now(), routes });
+
+  res.json({ origin, dest, generated: Date.now(), avgCongestion: avgCong, routes });
 });
 
 // GET /api/transit -> mock next buses
 router.get('/transit', (req, res) => {
-  res.json({
-    stop: "Central Bus Stop",
-    next: [
-      { line: "Bus 12", in_min: 5, status: "On time" },
-      { line: "Bus 3", in_min: 12, status: "Delayed 4m" },
-      { line: "Bus 5", in_min: 20, status: "On time" }
-    ]
-  });
+  // create a small, shifting schedule influenced by traffic hotspots
+  const hotspot = trafficData.areas.filter(a=>a.congestion>60).map(a=>a.name);
+  const next = [
+    { line: "Bus 12", in_min: Math.max(2, 5 + Math.round(hotspot.length * 2 - Math.random()*3)), status: hotspot.length? 'Delayed' : 'On time' },
+    { line: "Bus 3", in_min: Math.max(4, 10 + Math.round(hotspot.length * 2 + Math.random()*4)), status: Math.random()>0.7? 'Delayed 3m':'On time' },
+    { line: "Bus 5", in_min: Math.max(6, 15 + Math.round(hotspot.length * 3 + Math.random()*6)), status: 'On time' }
+  ];
+  res.json({ stop: "Central Bus Stop", next });
 });
 
 module.exports = router;
