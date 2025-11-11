@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Navify — Smart Commuter</title>
   <link rel="stylesheet" href="css/style.css">
+  <!-- Load socket.io client from CDN (fallback to ensure `io` exists even if backend is down) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/socket.io@4.7.1/client-dist/socket.io.min.js"></script>
   <script defer src="js/app.js"></script>
-  <!-- Load socket.io client from the backend server so sockets work even when using Live Server -->
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 </head>
 <body>
   <header class="site-header">

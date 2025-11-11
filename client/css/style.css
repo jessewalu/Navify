@@ -13,7 +13,7 @@
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071021 0%, #071a2b 100%);color:#e6f2f8}
 .site-header{
-  display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(6px);
+  display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));-webkit-backdrop-filter: blur(6px);backdrop-filter: blur(6px);
   border-bottom:1px solid rgba(255,255,255,0.02);
 }
 .brand{display:flex;align-items:center;gap:12px}
@@ -51,8 +51,9 @@ html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial;backgroun
 .site-footer{margin:20px auto;text-align:center;color:var(--muted);font-size:13px}
 
 /* slide-in animation */
-.slide-in{opacity:0;transform:translateY(20px);transition:all .7s cubic-bezier(.2,.9,.2,1)}
-.slide-in.visible{opacity:1;transform:none}
+.slide-in{opacity:1;transform:none;transition:all .7s cubic-bezier(.2,.9,.2,1)}
+.js .slide-in{opacity:0;transform:translateY(20px)}
+.js .slide-in.visible{opacity:1;transform:none}
 
 /* fancy zip effect for header */
 .brand h1{display:inline-block;position:relative;overflow:hidden}

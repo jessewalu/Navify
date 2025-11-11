@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const shortid = require('shortid');
 const trafficData = require('../data/mock_traffic.json');
+const fetch = global.fetch || require('node-fetch');
+const MAPS_KEY = process.env.MAPS_API_KEY || null;
 
 // GET /api/traffic -> returns current traffic snapshot
 router.get('/traffic', (req, res) => {
@@ -40,3 +42,4 @@ router.get('/transit', (req, res) => {
 });
 
 module.exports = router;
+
